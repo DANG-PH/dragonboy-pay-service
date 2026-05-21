@@ -5,6 +5,7 @@ import { join } from 'path';
 import { Logger } from '@nestjs/common';
 import { PAY_PACKAGE_NAME } from 'proto/pay.pb';
 import * as bodyParser from 'body-parser';
+import { MetricsModule } from './metrics.module';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -38,6 +39,9 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3005);
   logger.log(`✅ HTTP server running on ${process.env.PORT ?? 3005}`);
+
+  const metricsApp = await NestFactory.create(MetricsModule);
+  await metricsApp.listen(process.env.METRICS_PORT, '0.0.0.0'); 
 }
 
 bootstrap();
